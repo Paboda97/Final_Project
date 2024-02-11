@@ -4,29 +4,271 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "BMI Calculator",
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "BMI Calculator",
-            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
-          ),
-          backgroundColor: Colors.black,
-          shadowColor: Colors.black,
+      title: "BMI Calculator App",
+      home: Calculator(),
+    );
+  }
+}
+
+class Calculator extends StatefulWidget {
+  @override
+  _CalculatorState createState() => _CalculatorState();
+}
+
+class _CalculatorState extends State<Calculator> {
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+
+  String result = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        shadowColor: Colors.black,
+        title: const Text(
+          "BMI Calculator",
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
         ),
       ),
+      body: Container(
+        padding: EdgeInsets.all(17),
+        child: Column(
+          children: [
+            SizedBox(height: 8.0),
+            TextField(
+              controller: heightController,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText: "Your height in cm :",
+                labelStyle:
+                    TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                filled: true,
+                fillColor: Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            SizedBox(height: 20.0),
+            TextField(
+              controller: weightController,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText: "Your weight in kg :",
+                labelStyle:
+                    TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                filled: true,
+                fillColor: Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Container(
+              width: double.infinity,
+              height: 50.0,
+              child: TextButton(
+                onPressed: () {
+                  double height = double.parse(heightController.value.text);
+                  double weight = double.parse(weightController.value.text);
+                  calculateBmi(height, weight);
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.black),
+                ),
+                child: Text(
+                  "Calculate",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Container(
+              width: double.infinity,
+              height: 50.0,
+              child: TextButton(
+                onPressed: () {
+                  heightController.clear();
+                  weightController.clear();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.grey),
+                ),
+                child: Text(
+                  "Clear",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void calculateBmi(double height, double weight) {
+    double heightInMeters = height / 100;
+    double finalResult = weight / (heightInMeters * heightInMeters);
+    String bmi = finalResult.toStringAsFixed(2);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BmiResult(bmiResult: bmi)),
+    );
+  }
+}
+
+class BmiResult extends StatefulWidget {
+  final String bmiResult;
+
+  BmiResult({required this.bmiResult});
+
+  @override
+  _BmiResultState createState() => _BmiResultState();
+}
+
+class _BmiResultState extends State<BmiResult> {
+  String bmiCategory = '';
+
+  @override
+  void initState() {
+    super.initState();
+    calculateBmiCategory(double.parse(widget.bmiResult));
+  }
+
+  void calculateBmiCategory(double bmi) {
+    if (bmi < 16.0) {
+      bmiCategory = 'Severe undernourishment';
+    } else if (bmi >= 16.0 && bmi < 16.9) {
+      bmiCategory = 'Medium undernourishment';
+    } else if (bmi >= 16.9 && bmi < 18.5) {
+      bmiCategory = 'Slight undernourishment';
+    } else if (bmi >= 18.5 && bmi < 25.0) {
+      bmiCategory = 'Normal nutrition state';
+    } else if (bmi >= 25.0 && bmi < 30.0) {
+      bmiCategory = 'Overweight';
+    } else if (bmi >= 30.0 && bmi < 40.0) {
+      bmiCategory = 'Obesity';
+    } else if (bmi >= 40.0) {
+      bmiCategory = 'Pathological obesity';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'BMI Result',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
+        ),
+        backgroundColor: Colors.black,
+        shadowColor: Colors.black,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Your BMI is: ${widget.bmiResult}',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'BMI Category: $bmiCategory',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'BMI Assessment:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            _buildBmiAssessmentTable(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBmiAssessmentTable() {
+    return Table(
+      border: TableBorder.all(),
+      columnWidths: const <int, TableColumnWidth>{
+        0: FlexColumnWidth(),
+        1: FlexColumnWidth(),
+      },
+      children: <TableRow>[
+        TableRow(
+          children: <Widget>[
+            TableCell(child: Center(child: Text('<16 (kg/m²)'))),
+            TableCell(child: Center(child: Text('Severe undernourishment'))),
+          ],
+        ),
+        TableRow(
+          children: <Widget>[
+            TableCell(child: Center(child: Text('16-16.9 (kg/m²)'))),
+            TableCell(child: Center(child: Text('Medium undernourishment'))),
+          ],
+        ),
+        TableRow(
+          children: <Widget>[
+            TableCell(child: Center(child: Text('17-18.4 (kg/m²)'))),
+            TableCell(child: Center(child: Text('Slight undernourishment'))),
+          ],
+        ),
+        TableRow(
+          children: <Widget>[
+            TableCell(child: Center(child: Text('18.5-24.9 (kg/m²)'))),
+            TableCell(child: Center(child: Text('Normal nutrition state'))),
+          ],
+        ),
+        TableRow(
+          children: <Widget>[
+            TableCell(child: Center(child: Text('25-29.9 (kg/m²)'))),
+            TableCell(child: Center(child: Text('Overweight'))),
+          ],
+        ),
+        TableRow(
+          children: <Widget>[
+            TableCell(child: Center(child: Text('30-39.9 (kg/m²)'))),
+            TableCell(child: Center(child: Text('Obesity'))),
+          ],
+        ),
+        TableRow(
+          children: <Widget>[
+            TableCell(child: Center(child: Text('>40 (kg/m²)'))),
+            TableCell(child: Center(child: Text('Pathological obesity'))),
+          ],
+        ),
+      ],
     );
   }
 }
