@@ -38,6 +38,17 @@ class _CalculatorState extends State<Calculator> {
           "BMI Calculator",
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => InfoPage()),
+              );
+            },
+            icon: Icon(Icons.info),
+          )
+        ],
       ),
       body: Container(
         color: Colors.white,
@@ -49,8 +60,7 @@ class _CalculatorState extends State<Calculator> {
               controller: heightController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Colors.black), // Change input text color
+              style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 labelText: "Your height in cm :",
                 labelStyle:
@@ -68,7 +78,7 @@ class _CalculatorState extends State<Calculator> {
               controller: weightController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.black), // Change input text color
+              style: TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 labelText: "Your weight in kg :",
                 labelStyle:
@@ -161,16 +171,16 @@ class _BmiResultState extends State<BmiResult> {
 
   void calculateBmiCategory(double bmi) {
     if (bmi < 16.0) {
-      bmiCategory = 'Severe undernourishment';
+      bmiCategory = 'Severe Undernourishment';
       bmiCategoryTextColor = Colors.red;
     } else if (bmi >= 16.0 && bmi < 16.9) {
-      bmiCategory = 'Medium undernourishment';
+      bmiCategory = 'Medium Undernourishment';
       bmiCategoryTextColor = Colors.pink;
     } else if (bmi >= 16.9 && bmi < 18.5) {
-      bmiCategory = 'Slight undernourishment';
+      bmiCategory = 'Slight Undernourishment';
       bmiCategoryTextColor = Colors.yellow;
     } else if (bmi >= 18.5 && bmi < 25.0) {
-      bmiCategory = 'Normal nutrition state';
+      bmiCategory = 'Normal Nutrition State';
       bmiCategoryTextColor = Colors.green;
     } else if (bmi >= 25.0 && bmi < 30.0) {
       bmiCategory = 'Overweight';
@@ -179,7 +189,7 @@ class _BmiResultState extends State<BmiResult> {
       bmiCategory = 'Obesity';
       bmiCategoryTextColor = Colors.pink;
     } else if (bmi >= 40.0) {
-      bmiCategory = 'Pathological obesity';
+      bmiCategory = 'Pathological Obesity';
       bmiCategoryTextColor = Colors.red;
     }
   }
@@ -194,6 +204,17 @@ class _BmiResultState extends State<BmiResult> {
         ),
         backgroundColor: Colors.black,
         shadowColor: Colors.black,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => InfoPage()),
+              );
+            },
+            icon: Icon(Icons.info),
+          )
+        ],
       ),
       body: Center(
         child: Column(
@@ -202,15 +223,15 @@ class _BmiResultState extends State<BmiResult> {
             Text(
               'Your BMI is: ',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Keep original color
+                color: Colors.black,
               ),
             ),
             Text(
               '${widget.bmiResult}',
               style: TextStyle(
-                fontSize: 25,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: getColorForBmi(double.parse(widget.bmiResult)),
               ),
@@ -219,30 +240,20 @@ class _BmiResultState extends State<BmiResult> {
             const Text(
               'BMI Category: ',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Keep original color
+                color: Colors.black,
               ),
             ),
             Text(
               '$bmiCategory',
               style: TextStyle(
-                fontSize: 25,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: bmiCategoryTextColor,
               ),
             ),
             const SizedBox(height: 30),
-            const Text(
-              'BMI ASSESSMENT:',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black, // Keep original color
-              ),
-            ),
-            const SizedBox(height: 10),
-            _buildBmiAssessmentTable(),
           ],
         ),
       ),
@@ -266,6 +277,40 @@ class _BmiResultState extends State<BmiResult> {
       return Colors.red;
     }
   }
+}
+
+class InfoPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'BMI Info',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
+        ),
+        backgroundColor: Colors.black,
+        shadowColor: Colors.black,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'BMI ASSESSMENT:',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black, // Keep original color
+              ),
+            ),
+            const SizedBox(height: 10),
+            _buildBmiAssessmentTable(),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildBmiAssessmentTable() {
     return Table(
@@ -278,43 +323,85 @@ class _BmiResultState extends State<BmiResult> {
         TableRow(
           children: <Widget>[
             TableCell(child: Center(child: Text('<16 (kg/m²)'))),
-            TableCell(child: Center(child: Text('Severe undernourishment'))),
+            TableCell(
+              child: Center(
+                child: Text(
+                  'Severe Undernourishment',
+                ),
+              ),
+            ),
           ],
         ),
         TableRow(
           children: <Widget>[
             TableCell(child: Center(child: Text('16-16.9 (kg/m²)'))),
-            TableCell(child: Center(child: Text('Medium undernourishment'))),
+            TableCell(
+              child: Center(
+                child: Text(
+                  'Medium Undernourishment',
+                ),
+              ),
+            ),
           ],
         ),
         TableRow(
           children: <Widget>[
             TableCell(child: Center(child: Text('17-18.4 (kg/m²)'))),
-            TableCell(child: Center(child: Text('Slight undernourishment'))),
+            TableCell(
+              child: Center(
+                child: Text(
+                  'Slight Undernourishment',
+                ),
+              ),
+            ),
           ],
         ),
         TableRow(
           children: <Widget>[
             TableCell(child: Center(child: Text('18.5-24.9 (kg/m²)'))),
-            TableCell(child: Center(child: Text('Normal nutrition state'))),
+            TableCell(
+              child: Center(
+                child: Text(
+                  'Normal Nutrition State',
+                ),
+              ),
+            ),
           ],
         ),
         TableRow(
           children: <Widget>[
             TableCell(child: Center(child: Text('25-29.9 (kg/m²)'))),
-            TableCell(child: Center(child: Text('Overweight'))),
+            TableCell(
+              child: Center(
+                child: Text(
+                  'Overweight',
+                ),
+              ),
+            ),
           ],
         ),
         TableRow(
           children: <Widget>[
             TableCell(child: Center(child: Text('30-39.9 (kg/m²)'))),
-            TableCell(child: Center(child: Text('Obesity'))),
+            TableCell(
+              child: Center(
+                child: Text(
+                  'Obesity',
+                ),
+              ),
+            ),
           ],
         ),
         TableRow(
           children: <Widget>[
             TableCell(child: Center(child: Text('>40 (kg/m²)'))),
-            TableCell(child: Center(child: Text('Pathological obesity'))),
+            TableCell(
+              child: Center(
+                child: Text(
+                  'Pathological Obesity',
+                ),
+              ),
+            ),
           ],
         ),
       ],
