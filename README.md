@@ -10,5 +10,5 @@ This is my final project on Flutter. This is a simple BMI (Body Mass Index) Calc
 	Clear inputs with a single button click.
 ##
 ### Author
-Paboda Marasinghe ()
+Paboda Marasinghe (https://github.com/Paboda97)
 ###
