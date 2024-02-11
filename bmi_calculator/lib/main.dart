@@ -40,14 +40,17 @@ class _CalculatorState extends State<Calculator> {
         ),
       ),
       body: Container(
+        color: Colors.white,
         padding: EdgeInsets.all(17),
         child: Column(
           children: [
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             TextField(
               controller: heightController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Colors.black), // Change input text color
               decoration: InputDecoration(
                 labelText: "Your height in cm :",
                 labelStyle:
@@ -60,11 +63,12 @@ class _CalculatorState extends State<Calculator> {
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             TextField(
               controller: weightController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.black), // Change input text color
               decoration: InputDecoration(
                 labelText: "Your weight in kg :",
                 labelStyle:
@@ -77,7 +81,7 @@ class _CalculatorState extends State<Calculator> {
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Container(
               width: double.infinity,
               height: 50.0,
@@ -90,7 +94,7 @@ class _CalculatorState extends State<Calculator> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black),
                 ),
-                child: Text(
+                child: const Text(
                   "Calculate",
                   style: TextStyle(
                     color: Colors.white,
@@ -98,7 +102,7 @@ class _CalculatorState extends State<Calculator> {
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Container(
               width: double.infinity,
               height: 50.0,
@@ -110,7 +114,7 @@ class _CalculatorState extends State<Calculator> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.grey),
                 ),
-                child: Text(
+                child: const Text(
                   "Clear",
                   style: TextStyle(
                     color: Colors.white,
@@ -147,6 +151,7 @@ class BmiResult extends StatefulWidget {
 
 class _BmiResultState extends State<BmiResult> {
   String bmiCategory = '';
+  Color bmiCategoryTextColor = Colors.black;
 
   @override
   void initState() {
@@ -157,18 +162,25 @@ class _BmiResultState extends State<BmiResult> {
   void calculateBmiCategory(double bmi) {
     if (bmi < 16.0) {
       bmiCategory = 'Severe undernourishment';
+      bmiCategoryTextColor = Colors.red;
     } else if (bmi >= 16.0 && bmi < 16.9) {
       bmiCategory = 'Medium undernourishment';
+      bmiCategoryTextColor = Colors.pink;
     } else if (bmi >= 16.9 && bmi < 18.5) {
       bmiCategory = 'Slight undernourishment';
+      bmiCategoryTextColor = Colors.yellow;
     } else if (bmi >= 18.5 && bmi < 25.0) {
       bmiCategory = 'Normal nutrition state';
+      bmiCategoryTextColor = Colors.green;
     } else if (bmi >= 25.0 && bmi < 30.0) {
       bmiCategory = 'Overweight';
+      bmiCategoryTextColor = Colors.yellow;
     } else if (bmi >= 30.0 && bmi < 40.0) {
       bmiCategory = 'Obesity';
+      bmiCategoryTextColor = Colors.pink;
     } else if (bmi >= 40.0) {
       bmiCategory = 'Pathological obesity';
+      bmiCategoryTextColor = Colors.red;
     }
   }
 
@@ -188,34 +200,71 @@ class _BmiResultState extends State<BmiResult> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Your BMI is: ${widget.bmiResult}',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'BMI Category: $bmiCategory',
+              'Your BMI is: ',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Colors.black, // Keep original color
               ),
             ),
-            SizedBox(height: 20),
             Text(
-              'BMI Assessment:',
+              '${widget.bmiResult}',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: getColorForBmi(double.parse(widget.bmiResult)),
+              ),
+            ),
+            const SizedBox(height: 30),
+            const Text(
+              'BMI Category: ',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Colors.black, // Keep original color
               ),
             ),
-            SizedBox(height: 10),
+            Text(
+              '$bmiCategory',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: bmiCategoryTextColor,
+              ),
+            ),
+            const SizedBox(height: 30),
+            const Text(
+              'BMI ASSESSMENT:',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black, // Keep original color
+              ),
+            ),
+            const SizedBox(height: 10),
             _buildBmiAssessmentTable(),
           ],
         ),
       ),
     );
+  }
+
+  Color getColorForBmi(double bmi) {
+    if (bmi < 16.0) {
+      return Colors.red;
+    } else if (bmi >= 16.0 && bmi < 16.9) {
+      return Colors.pink;
+    } else if (bmi >= 16.9 && bmi < 18.5) {
+      return Colors.yellow;
+    } else if (bmi >= 18.5 && bmi < 25.0) {
+      return Colors.green;
+    } else if (bmi >= 25.0 && bmi < 30.0) {
+      return Colors.yellow;
+    } else if (bmi >= 30.0 && bmi < 40.0) {
+      return Colors.pink;
+    } else {
+      return Colors.red;
+    }
   }
 
   Widget _buildBmiAssessmentTable() {
@@ -225,7 +274,7 @@ class _BmiResultState extends State<BmiResult> {
         0: FlexColumnWidth(),
         1: FlexColumnWidth(),
       },
-      children: <TableRow>[
+      children: const <TableRow>[
         TableRow(
           children: <Widget>[
             TableCell(child: Center(child: Text('<16 (kg/m²)'))),
