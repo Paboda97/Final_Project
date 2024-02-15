@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "BMI Calculator App",
       home: Calculator(),
@@ -17,16 +18,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Calculator extends StatefulWidget {
-  @override
-  _CalculatorState createState() => _CalculatorState();
-}
-
-class _CalculatorState extends State<Calculator> {
-  TextEditingController heightController = TextEditingController();
-  TextEditingController weightController = TextEditingController();
-
-  String result = '';
+class Calculator extends StatelessWidget {
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +35,15 @@ class _CalculatorState extends State<Calculator> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => InfoPage()),
-              );
+              Get.to(InfoPage());
             },
-            icon: Icon(Icons.info),
+            icon: const Icon(Icons.info),
           )
         ],
       ),
       body: Container(
         color: Colors.white,
-        padding: EdgeInsets.all(17),
+        padding: const EdgeInsets.all(17),
         child: Column(
           children: [
             const SizedBox(height: 8.0),
@@ -64,7 +55,7 @@ class _CalculatorState extends State<Calculator> {
               decoration: InputDecoration(
                 labelText: "Your height in cm :",
                 labelStyle:
-                    TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
                 filled: true,
                 fillColor: Colors.grey[100],
                 border: OutlineInputBorder(
@@ -78,11 +69,11 @@ class _CalculatorState extends State<Calculator> {
               controller: weightController,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 labelText: "Your weight in kg :",
                 labelStyle:
-                    TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
                 filled: true,
                 fillColor: Colors.grey[100],
                 border: OutlineInputBorder(
@@ -143,62 +134,20 @@ class _CalculatorState extends State<Calculator> {
     double finalResult = weight / (heightInMeters * heightInMeters);
     String bmi = finalResult.toStringAsFixed(2);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => BmiResult(bmiResult: bmi)),
-    );
+    Get.to(BmiResult(bmiResult: bmi));
   }
 }
 
-class BmiResult extends StatefulWidget {
+class BmiResult extends StatelessWidget {
   final String bmiResult;
 
-  BmiResult({required this.bmiResult});
-
-  @override
-  _BmiResultState createState() => _BmiResultState();
-}
-
-class _BmiResultState extends State<BmiResult> {
-  String bmiCategory = '';
-  Color bmiCategoryTextColor = Colors.black;
-
-  @override
-  void initState() {
-    super.initState();
-    calculateBmiCategory(double.parse(widget.bmiResult));
-  }
-
-  void calculateBmiCategory(double bmi) {
-    if (bmi < 16.0) {
-      bmiCategory = 'Severe Undernourishment';
-      bmiCategoryTextColor = Colors.red;
-    } else if (bmi >= 16.0 && bmi < 16.9) {
-      bmiCategory = 'Medium Undernourishment';
-      bmiCategoryTextColor = Colors.pink;
-    } else if (bmi >= 16.9 && bmi < 18.5) {
-      bmiCategory = 'Slight Undernourishment';
-      bmiCategoryTextColor = Colors.yellow;
-    } else if (bmi >= 18.5 && bmi < 25.0) {
-      bmiCategory = 'Normal Nutrition State';
-      bmiCategoryTextColor = Colors.green;
-    } else if (bmi >= 25.0 && bmi < 30.0) {
-      bmiCategory = 'Overweight';
-      bmiCategoryTextColor = Colors.yellow;
-    } else if (bmi >= 30.0 && bmi < 40.0) {
-      bmiCategory = 'Obesity';
-      bmiCategoryTextColor = Colors.pink;
-    } else if (bmi >= 40.0) {
-      bmiCategory = 'Pathological Obesity';
-      bmiCategoryTextColor = Colors.red;
-    }
-  }
+  const BmiResult({required this.bmiResult});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'BMI Result',
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
         ),
@@ -207,12 +156,9 @@ class _BmiResultState extends State<BmiResult> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => InfoPage()),
-              );
+              Get.to(InfoPage());
             },
-            icon: Icon(Icons.info),
+            icon: const Icon(Icons.info),
           )
         ],
       ),
@@ -220,7 +166,7 @@ class _BmiResultState extends State<BmiResult> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Your BMI is: ',
               style: TextStyle(
                 fontSize: 25,
@@ -229,11 +175,11 @@ class _BmiResultState extends State<BmiResult> {
               ),
             ),
             Text(
-              '${widget.bmiResult}',
+              '$bmiResult',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: getColorForBmi(double.parse(widget.bmiResult)),
+                color: getColorForBmi(double.parse(bmiResult)),
               ),
             ),
             const SizedBox(height: 30),
@@ -246,11 +192,11 @@ class _BmiResultState extends State<BmiResult> {
               ),
             ),
             Text(
-              '$bmiCategory',
+              '${getBmiCategory(double.parse(bmiResult))}',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: bmiCategoryTextColor,
+                color: getColorForBmi(double.parse(bmiResult)),
               ),
             ),
             const SizedBox(height: 30),
@@ -277,6 +223,24 @@ class _BmiResultState extends State<BmiResult> {
       return Colors.red;
     }
   }
+
+  String getBmiCategory(double bmi) {
+    if (bmi < 16.0) {
+      return 'Severe Undernourishment';
+    } else if (bmi >= 16.0 && bmi < 16.9) {
+      return 'Medium Undernourishment';
+    } else if (bmi >= 16.9 && bmi < 18.5) {
+      return 'Slight Undernourishment';
+    } else if (bmi >= 18.5 && bmi < 25.0) {
+      return 'Normal Nutrition State';
+    } else if (bmi >= 25.0 && bmi < 30.0) {
+      return 'Overweight';
+    } else if (bmi >= 30.0 && bmi < 40.0) {
+      return 'Obesity';
+    } else {
+      return 'Pathological Obesity';
+    }
+  }
 }
 
 class InfoPage extends StatelessWidget {
@@ -284,7 +248,7 @@ class InfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'BMI Info',
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
         ),
@@ -296,12 +260,12 @@ class InfoPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'BMI ASSESSMENT:',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Keep original color
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 10),
